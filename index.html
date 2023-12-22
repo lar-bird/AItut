@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+    <title>AI Tutor</title>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Tutor</h1>
+        <button onclick="addQuestion()">+ Add Question</button>
+        <div id="question-container"></div>
+        <button onclick="generateQuestion()">Generate Test</button>
+        <div id="answer-container"></div>
+    </div>
+
+    <script>
+        const questions = [];
+        let currentQuestionIndex = 0;
+
+        function addQuestion() {
+            const questionText = prompt("Enter your question:");
+            if (questionText) {
+                questions.push({ index: questions.length + 1, text: questionText });
+            }
+        }
+
+        function generateQuestion() {
+            if (questions.length === 0) {
+                alert("Please add questions first!");
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const currentQuestion = questions[randomIndex];
+            
+            const answer = prompt(`Question ${currentQuestion.index}: ${currentQuestion.text}\nCan you solve this?`);
+            
+            if (answer !== null) {
+                checkAnswer(currentQuestion, answer);
+            }
+        }
+
+        function checkAnswer(question, userAnswer) {
+            // Assume a simple check for demonstration purposes
+            const aiGeneratedAnswer = "AI-generated answer";
+            const isCorrect = userAnswer.toLowerCase().trim() === aiGeneratedAnswer.toLowerCase().trim();
+            
+            if (isCorrect) {
+                alert("Congratulations! Your answer is correct.");
+            } else {
+                alert("You can do it! The correct answer is: " + aiGeneratedAnswer);
+            }
+
+            // Remove the question from the array
+            questions.splice(questions.indexOf(question), 1);
+
+            // If all questions are completed, show a message
+            if (questions.length === 0) {
+                alert("You have completed all questions. Great job!");
+            }
+        }
+    </script>
+</body>
+</html>
