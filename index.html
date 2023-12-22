@@ -33,7 +33,6 @@
 
     <script>
         const questions = [];
-        let currentQuestionIndex = 0;
 
         function addQuestion() {
             const questionText = prompt("Enter your question:");
@@ -42,7 +41,7 @@
             }
         }
 
-        async function generateQuestion() {
+        function generateQuestion() {
             if (questions.length === 0) {
                 alert("Please add questions first!");
                 return;
@@ -50,39 +49,17 @@
 
             const randomIndex = Math.floor(Math.random() * questions.length);
             const currentQuestion = questions[randomIndex];
-
-            const userAnswer = prompt(`Question ${currentQuestion.index}: ${currentQuestion.text}\nCan you solve this?`);
             
-            if (userAnswer !== null) {
-                const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
-                const aiGeneratedAnswer = await getAiAnswer(currentQuestion.text, apiKey);
-                checkAnswer(currentQuestion, userAnswer, aiGeneratedAnswer);
+            const answer = prompt(`Question ${currentQuestion.index}: ${currentQuestion.text}\nCan you solve this?`);
+            
+            if (answer !== null) {
+                checkAnswer(currentQuestion, answer);
             }
         }
 
-        async function getAiAnswer(question, apiKey) {
-            // Replace this URL with your own API endpoint
-            const apiEndpoint = 'https://example.com/ai-answer';
-            
-            try {
-                const response = await fetch(apiEndpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${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}`, // Include your API key
-                    },
-                    body: JSON.stringify({ question }),
-                });
-
-                const result = await response.json();
-                return result.answer;
-            } catch (error) {
-                console.error('Error fetching AI answer:', error);
-                return null;
-            }
-        }
-
-        function checkAnswer(question, userAnswer, aiGeneratedAnswer) {
+        function checkAnswer(question, userAnswer) {
+            // Assuming you're using the last question
+            const aiGeneratedAnswer = getAiGeneratedAnswer(question.text);
             const isCorrect = userAnswer.toLowerCase().trim() === aiGeneratedAnswer.toLowerCase().trim();
             
             if (isCorrect) {
@@ -98,6 +75,23 @@
             if (questions.length === 0) {
                 alert("You have completed all questions. Great job!");
             }
+        }
+
+        // Function to call your AI service and get the answer
+        function getAiGeneratedAnswer(questionText) {
+            // Replace 'your-ai-service-endpoint' with the actual endpoint of your AI service
+            const aiServiceEndpoint = 'your-ai-service-endpoint';
+
+            // Call your AI service to get the answer
+            // You might want to use Fetch or another method for asynchronous requests
+            // Replace 'your-ai-service-api-key' with your actual API key for the AI service
+            const aiServiceApiKey = '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';
+            // For example: fetch(`${aiServiceEndpoint}?question=${encodeURIComponent(questionText)}`, { headers: { 'Authorization': `Bearer ${aiServiceApiKey}` } })
+            //   .then(response => response.json())
+            //   .then(data => console.log(data.answer));
+
+            // For the sake of simplicity, return a dummy answer
+            return 'AI-generated answer';
         }
     </script>
 </body>
