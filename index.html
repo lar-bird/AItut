@@ -42,7 +42,7 @@
             }
         }
 
-        function generateQuestion() {
+        async function generateQuestion() {
             if (questions.length === 0) {
                 alert("Please add questions first!");
                 return;
@@ -50,23 +50,45 @@
 
             const randomIndex = Math.floor(Math.random() * questions.length);
             const currentQuestion = questions[randomIndex];
+
+            const userAnswer = prompt(`Question ${currentQuestion.index}: ${currentQuestion.text}\nCan you solve this?`);
             
-            const answer = prompt(`Question ${currentQuestion.index}: ${currentQuestion.text}\nCan you solve this?`);
-            
-            if (answer !== null) {
-                checkAnswer(currentQuestion, answer);
+            if (userAnswer !== null) {
+                const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
+                const aiGeneratedAnswer = await getAiAnswer(currentQuestion.text, apiKey);
+                checkAnswer(currentQuestion, userAnswer, aiGeneratedAnswer);
             }
         }
 
-        function checkAnswer(question, userAnswer) {
-            // Assume a simple check for demonstration purposes
-            const aiGeneratedAnswer = "AI-generated answer";
+        async function getAiAnswer(question, apiKey) {
+            // Replace this URL with your own API endpoint
+            const apiEndpoint = 'https://example.com/ai-answer';
+            
+            try {
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${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}`, // Include your API key
+                    },
+                    body: JSON.stringify({ question }),
+                });
+
+                const result = await response.json();
+                return result.answer;
+            } catch (error) {
+                console.error('Error fetching AI answer:', error);
+                return null;
+            }
+        }
+
+        function checkAnswer(question, userAnswer, aiGeneratedAnswer) {
             const isCorrect = userAnswer.toLowerCase().trim() === aiGeneratedAnswer.toLowerCase().trim();
             
             if (isCorrect) {
                 alert("Congratulations! Your answer is correct.");
             } else {
-                alert("You can do it! The correct answer is: " + aiGeneratedAnswer);
+                alert(`You can do it! The correct answer is: ${aiGeneratedAnswer}`);
             }
 
             // Remove the question from the array
